@@ -1,0 +1,4 @@
+hcc2d_encoder
+*.o
+SHA256SUMS.txt
+release/
