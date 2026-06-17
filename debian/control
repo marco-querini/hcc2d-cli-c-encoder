@@ -1,0 +1,19 @@
+Source: hcc2d-encoder
+Section: graphics
+Priority: optional
+Maintainer: Marco Querini <info@hcc2d.com>
+Build-Depends: debhelper (>= 12), zlib1g-dev
+Standards-Version: 4.7.0
+Homepage: https://hcc2d.com/en/
+Rules-Requires-Root: no
+
+Package: hcc2d-encoder
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: standalone QR and HCC2D PNG encoder
+ Single-file C command-line encoder for generating PNG images containing
+ standard QR symbols or HCC2D 4-colour and 8-colour symbols.
+ .
+ It accepts text or file input, supports raw payload encoding or HCC2DF
+ payload wrapping, and renders raster output suitable for testing,
+ documentation, and reference workflows.

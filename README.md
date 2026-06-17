@@ -64,6 +64,18 @@ Equivalent direct command:
 cc -O2 -o hcc2d_encoder single_file_c_hcc2d_encoder_v0.9.0.c -lz
 ```
 
+Install to the default local prefix:
+
+```bash
+make install
+```
+
+Install into a packaging or staging directory:
+
+```bash
+make install DESTDIR=/tmp/hcc2d-stage PREFIX=/usr
+```
+
 ## Usage
 
 Show help:
@@ -255,3 +267,8 @@ This package was reviewed against the HCC2D 0.9.0 specification with checks on:
 ## License
 
 This package is distributed under Apache License 2.0. See `LICENSE`.
+
+## APT repository
+
+This repository also contains scaffolding for a signed self-hosted APT
+repository for Debian and Ubuntu. See `apt-repo/README.md`.

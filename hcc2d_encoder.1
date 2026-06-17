@@ -1,0 +1,79 @@
+.TH HCC2D_ENCODER 1 "June 2026" "HCC2D CLI Encoder 0.9.0" "User Commands"
+.SH NAME
+hcc2d_encoder \- encode text or file payloads as QR, HCC2D4, or HCC2D8 PNG images
+.SH SYNOPSIS
+.B hcc2d_encoder
+[\fIoptions\fR]
+\fIoutput.png\fR
+.SH DESCRIPTION
+\fBhcc2d_encoder\fR is a standalone command-line encoder for generating raster
+PNG images containing standard QR symbols or HCC2D symbols.
+It accepts either inline text or file bytes as input and can encode them
+directly or wrap them in an HCC2DF container with filename metadata and
+optional compression.
+.SH OPTIONS
+.TP
+\fB\-\-text\fR \fISTRING\fR
+Encode the UTF-8 bytes of \fISTRING\fR.
+.TP
+\fB\-\-input-file\fR \fIPATH\fR
+Read raw bytes from \fIPATH\fR.
+.TP
+\fB\-\-file-format\fR \fBhcc2df\fR|\fBraw\fR
+Select payload framing.
+\fBhcc2df\fR wraps the payload in an HCC2DF container and is the default.
+\fBraw\fR encodes the bytes directly with no wrapper.
+.TP
+\fB\-\-mode\fR \fBqr\fR|\fBhcc2d4\fR|\fBhcc2d8\fR
+Select the symbol family.
+\fBqr\fR generates a standard black/white QR Code.
+\fBhcc2d4\fR and \fBhcc2d8\fR generate 4-colour and 8-colour HCC2D symbols.
+The default is \fBhcc2d4\fR.
+.TP
+\fB\-\-ec-level\fR \fBL\fR|\fBM\fR|\fBQ\fR|\fBH\fR
+Set the error-correction level.
+The default is \fBQ\fR.
+.TP
+\fB\-\-version\fR \fIN\fR
+Set the symbol version from 1 to 40, or use 0 to auto-select the smallest
+fitting version.
+The default is 0.
+.TP
+\fB\-\-scale\fR \fIPX\fR
+Set pixels per module in the output PNG.
+The minimum is 6 and the default is 12.
+.TP
+\fB\-\-quiet-zone\fR \fIN\fR
+Set the white border around the symbol in modules.
+The default is 4.
+.TP
+\fB\-\-palette\fR \fBmodel1\fR|\fBmodel2\fR
+Select the HCC2D colour palette.
+Ignored for \fB\-\-mode qr\fR.
+.TP
+\fB\-\-help\fR
+Show the built-in help text and exit.
+.SH EXAMPLES
+.TP
+Encode raw text as a standard QR symbol:
+.B hcc2d_encoder \-\-text "https://hcc2d.com/spec" \-\-mode qr \-\-file-format raw qr.png
+.TP
+Encode a file as an HCC2DF-wrapped HCC2D8 symbol:
+.B hcc2d_encoder \-\-input-file report.pdf \-\-mode hcc2d8 \-\-file-format hcc2df report.png
+.SH EXIT STATUS
+.B hcc2d_encoder
+returns 0 on success and a non-zero status on failure.
+.SH FILES
+.TP
+.I /usr/bin/hcc2d_encoder
+Installed command-line encoder.
+.SH AUTHOR
+Marco Querini
+.SH LICENSE
+Apache License 2.0.
+.SH SEE ALSO
+.UR https://hcc2d.com/en/
+.UE
+.br
+.UR https://hcc2d.com/hcc2d_specification_v0.9.0.pdf
+.UE
