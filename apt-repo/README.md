@@ -106,23 +106,22 @@ apt-repo/scripts/check.sh --distribution noble
 
 ## 5. Host the repository
 
-Serve `apt-repo/public/` over HTTPS on a stable URL, for example:
+The official HCC2D Encoder repository is hosted at:
 
 ```text
-https://packages.hcc2d.com/apt/
+https://hcc2d.com/apt-encoder/
 ```
 
 ## User installation flow
 
-If the repository is hosted at `https://packages.hcc2d.com/apt`, Debian/Ubuntu
-users can install it with:
+Debian/Ubuntu users can install it with:
 
 ```bash
-curl -fsSL https://packages.hcc2d.com/apt/hcc2d-archive-keyring.gpg \
+curl -fsSL https://hcc2d.com/apt-encoder/hcc2d-archive-keyring.gpg \
   | sudo tee /usr/share/keyrings/hcc2d-archive-keyring.gpg >/dev/null
 
-echo "deb [signed-by=/usr/share/keyrings/hcc2d-archive-keyring.gpg] https://packages.hcc2d.com/apt noble main" \
-  | sudo tee /etc/apt/sources.list.d/hcc2d.list >/dev/null
+echo "deb [signed-by=/usr/share/keyrings/hcc2d-archive-keyring.gpg] https://hcc2d.com/apt-encoder noble main" \
+  | sudo tee /etc/apt/sources.list.d/hcc2d-encoder.list >/dev/null
 
 sudo apt update
 sudo apt install hcc2d-encoder
@@ -132,7 +131,7 @@ Replace `noble` with the user distribution codename as needed.
 
 ## Professional deployment recommendations
 
-- Use a dedicated domain or subdomain such as `packages.hcc2d.com`
+- Use a stable HTTPS URL for the repository
 - Publish over HTTPS only
 - Keep the signing key offline if possible; use a dedicated CI key only if
   you understand the risk
