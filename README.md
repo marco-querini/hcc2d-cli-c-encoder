@@ -7,7 +7,7 @@ Standalone distribution of the HCC2D single-file C reference encoder.
 ## Official links
 
 - HCC2D website: `https://hcc2d.com/en/`
-- HCC2D specification PDF: `https://hcc2d.com/hcc2d_specification_v0.9.0.pdf`
+- HCC2D Code Specification 0.9.0: `https://doi.org/10.5281/zenodo.22206528`
 - HCC2D API: `https://hcc2d.com/en/api`
 - HCC2D Decoder official availability:
   - Google Play: `https://play.google.com/store/apps/details?id=com.hcc2d.decoder`
@@ -29,7 +29,7 @@ Standalone distribution of the HCC2D single-file C reference encoder.
 This package contains a compact single-file C encoder intended to conform to:
 
 - `HCC2D Code Specification version 0.9.0`
-- Reference PDF: `https://hcc2d.com/hcc2d_specification_v0.9.0.pdf`
+- Reference specification: `https://doi.org/10.5281/zenodo.22206528`
 
 For normative format details, decoding assumptions, payload-wrapper rules, and
 parameter-table definitions, refer to the specification PDF above.
