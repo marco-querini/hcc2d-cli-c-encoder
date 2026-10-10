@@ -270,8 +270,10 @@ This package is distributed under Apache License 2.0. See `LICENSE`.
 
 ## APT repository
 
-This repository also contains scaffolding for a signed self-hosted APT
-repository for Debian and Ubuntu. See `apt-repo/README.md`.
+The signed Debian/Ubuntu repository publishes `hcc2d-encoder 0.9.0-2` while
+retaining revision `0.9.0-1` for rollback. Encoder and Streamer metadata are
+hosted and deployed independently, so publishing one package cannot remove the
+other from APT. See `apt-repo/README.md` for the validated publication flow.
 
 ## Notice
 

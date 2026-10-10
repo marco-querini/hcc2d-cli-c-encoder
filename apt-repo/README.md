@@ -1,7 +1,8 @@
-# HCC2D APT Repository
+# HCC2D Encoder APT Repository
 
-This directory contains the infrastructure for publishing a signed APT
-repository for Debian and Ubuntu users.
+This directory contains the infrastructure for publishing the
+`hcc2d-encoder` Debian package in a signed APT repository for Debian and
+Ubuntu users.
 
 It is separate from the Debian packaging in `debian/`:
 
@@ -18,7 +19,9 @@ The default configuration includes:
 - Ubuntu `jammy`
 - Ubuntu `noble`
 
-Edit `apt-repo/repo.conf` if you want a different matrix.
+Edit `apt-repo/repo.conf` or override its environment variables to change the
+distribution and architecture matrix. One repository component is supported;
+it is `main` by default.
 
 ## Repository layout
 
@@ -32,87 +35,83 @@ apt-repo/public/
 
 This layout is suitable for static hosting over HTTPS.
 
-## Prerequisites
+## Signing key
 
-- `gpg`
-- `apt-ftparchive` from `apt-utils`
-- built `.deb` artifacts from `dpkg-buildpackage`
-
-## 1. Create or choose a signing key
-
-Use a dedicated repository signing key.
-
-Example:
-
-```bash
-gpg --full-generate-key
-gpg --list-secret-keys --keyid-format=long
-```
-
-Then set the key ID or fingerprint:
-
-```bash
-export APT_REPO_GPG_KEY=YOURKEYID
-```
-
-You can also persist it in `apt-repo/repo.conf`.
-
-## 2. Export the public key
-
-```bash
-apt-repo/scripts/export-public-key.sh
-```
-
-This writes:
+The Encoder and Streamer use the same public HCC2D archive key:
 
 ```text
-apt-repo/public/hcc2d-archive-keyring.gpg
+4DCDC5549D1955166EE3E83A567381E2B0354085
 ```
 
-Host that file alongside the repository so users can install it.
+Only the public key `apt-repo/public/hcc2d-archive-keyring.gpg` is versioned.
+Private GnuPG material must remain outside the repository. When it is stored
+in a non-default keyring, provide its location only for the publishing command:
 
-## 3. Publish a package
+```bash
+GNUPGHOME=/path/to/private/apt-gpg \
+  apt-repo/scripts/publish.sh --distribution noble \
+  --deb ../hcc2d-encoder_0.9.0-2_amd64.deb
+```
 
-Example for Ubuntu 24.04 (`noble`):
+The publishing script reads private-key material only through GnuPG and never
+copies it into the repository.
+
+## Prerequisites
+
+- `gpg` and `gpgv`
+- `apt-ftparchive` from `apt-utils`
+- `dpkg-deb`, `gzip`, and `sha256sum`
+- a `.deb` built with `dpkg-buildpackage`
+
+## Build the package
+
+From the repository root:
+
+```bash
+dpkg-buildpackage -us -uc -b
+```
+
+## Publish metadata
+
+Publish for Ubuntu 24.04 (`noble`):
 
 ```bash
 apt-repo/scripts/publish.sh \
   --distribution noble \
-  --deb ../hcc2d-encoder_0.9.0-1_amd64.deb
+  --deb ../hcc2d-encoder_0.9.0-2_amd64.deb
 ```
 
-Example for Debian 12 (`bookworm`):
-
-```bash
-apt-repo/scripts/publish.sh \
-  --distribution bookworm \
-  --deb ../hcc2d-encoder_0.9.0-1_amd64.deb
-```
-
-For dry runs without signatures:
+Generate unsigned metadata for a dry run:
 
 ```bash
 apt-repo/scripts/publish.sh \
   --distribution noble \
-  --deb ../hcc2d-encoder_0.9.0-1_amd64.deb \
+  --deb ../hcc2d-encoder_0.9.0-2_amd64.deb \
   --skip-signing
 ```
 
-## 4. Validate metadata
+Validate the generated repository:
 
 ```bash
 apt-repo/scripts/check.sh --distribution noble
 ```
 
-## 5. Host the repository
+The publication script validates every package, preserves prior revisions,
+prepares package indexes and signatures in a staging directory, and only then
+installs the completed metadata. It refuses to replace an existing package
+filename with different content. The check script verifies compressed indexes,
+referenced package sizes and SHA-256 hashes, Release checksums, and signatures.
+
+Generated pools, distribution metadata, and temporary files are ignored by
+Git. Deploy them separately to the HTTPS package host.
+
+## Official repository and installation
 
 The official HCC2D Encoder repository is hosted at:
 
 ```text
 https://hcc2d.com/apt-encoder/
 ```
-
-## User installation flow
 
 Debian/Ubuntu users can install it with:
 
@@ -128,6 +127,25 @@ sudo apt install hcc2d-encoder
 ```
 
 Replace `noble` with the user distribution codename as needed.
+
+## Export the public key
+
+If the public key needs to be regenerated from the signing keyring:
+
+```bash
+GNUPGHOME=/path/to/private/apt-gpg \
+  apt-repo/scripts/export-public-key.sh
+```
+
+Verify the exported fingerprint before committing it:
+
+```bash
+gpg --show-keys --with-fingerprint \
+  apt-repo/public/hcc2d-archive-keyring.gpg
+```
+
+Never add a private key, `private-keys-v1.d`, revocation certificate, or a
+complete private GnuPG home to this public repository.
 
 ## Professional deployment recommendations
 
